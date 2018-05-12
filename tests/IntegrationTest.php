@@ -367,10 +367,12 @@ class TestController
 
 class Foo extends Model
 {
+    //
 }
 
 class Bar extends Model
 {
+    //
 }
 
 class CustomBinding
