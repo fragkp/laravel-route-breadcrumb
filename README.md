@@ -1,4 +1,4 @@
-# Very short description of the package
+# Add breadcrumbs to your routes
 
 [![Latest Version](https://img.shields.io/github/release/fragkp/laravel-route-breadcrumb.svg?style=flat-square)](https://github.com/fragkp/laravel-route-breadcrumb/releases)
 [![Build Status](https://img.shields.io/travis/fragkp/laravel-route-breadcrumb/master.svg?style=flat-square)](https://travis-ci.org/fragkp/laravel-route-breadcrumb)
