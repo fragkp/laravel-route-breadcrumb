@@ -10,7 +10,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [
             \Fragkp\LaravelSimpleBreadcrumb\BreadcrumbServiceProvider::class,
-            \Orchestra\Database\ConsoleServiceProvider::class
+            \Orchestra\Database\ConsoleServiceProvider::class,
         ];
     }
 
@@ -26,8 +26,8 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function migrate()
     {
-        $this->loadMigrationsFrom(realpath(__DIR__ . '/database/migrations'));
+        $this->loadMigrationsFrom(realpath(__DIR__.'/database/migrations'));
 
-        $this->loadFactoriesUsing($this->app, realpath(__DIR__ . '/database/factories'));
+        $this->loadFactoriesUsing($this->app, realpath(__DIR__.'/database/factories'));
     }
 }

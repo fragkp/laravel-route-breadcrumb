@@ -5,12 +5,12 @@ namespace Fragkp\LaravelSimpleBreadcrumb;
 class BreadcrumbLink
 {
     /**
-     * @var string $uri
+     * @var string
      */
     public $uri;
 
     /**
-     * @var string $title
+     * @var string
      */
     public $title;
 

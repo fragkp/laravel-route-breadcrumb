@@ -151,7 +151,6 @@ class IntegrationTest extends TestCase
         $this->assertEquals(new BreadcrumbLink('/', 'Start'), app(Breadcrumb::class)->index());
 
         $this->assertEquals(new BreadcrumbLink('foo', 'First'), app(Breadcrumb::class)->current());
-
     }
 
     /** @test */
@@ -176,7 +175,6 @@ class IntegrationTest extends TestCase
         $this->assertEquals(new BreadcrumbLink('bar', 'Start first'), app(Breadcrumb::class)->index());
 
         $this->assertEquals(new BreadcrumbLink('foo', 'First'), app(Breadcrumb::class)->current());
-
     }
 
     /** @test */
@@ -309,7 +307,7 @@ class IntegrationTest extends TestCase
                 Route::get('/')->breadcrumbGroup('Inside second group');
 
                 Route::middleware(SubstituteBindings::class)->get('/{foo}/{bar}', function (Foo $foo, Bar $bar) {
-                    return $foo->id . '-' . $bar->id;
+                    return $foo->id.'-'.$bar->id;
                 })->breadcrumb('Binding');
             });
         });
@@ -367,9 +365,15 @@ class TestController
     }
 }
 
-class Foo extends Model {}
+class Foo extends Model
+{
+    //
+}
 
-class Bar extends Model {}
+class Bar extends Model
+{
+    //
+}
 
 class CustomBinding
 {
