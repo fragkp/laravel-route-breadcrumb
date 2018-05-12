@@ -10,12 +10,12 @@ use Illuminate\Support\Collection;
 class Breadcrumb
 {
     /**
-     * @var \Illuminate\Routing\Router $router
+     * @var \Illuminate\Routing\Router
      */
     protected $router;
 
     /**
-     * @var \Illuminate\Http\Request $request
+     * @var \Illuminate\Http\Request
      */
     protected $request;
 
@@ -30,7 +30,7 @@ class Breadcrumb
      */
     public function __construct(Router $router, Request $request)
     {
-        $this->router  = $router;
+        $this->router = $router;
         $this->request = $request;
     }
 
@@ -44,7 +44,7 @@ class Breadcrumb
         });
 
         if (! $indexRoute) {
-            return null;
+            return;
         }
 
         return new BreadcrumbLink(
@@ -82,7 +82,7 @@ class Breadcrumb
             })
             ->mapWithKeys(function (Route $route) {
                 return [
-                    $route->uri() => new BreadcrumbLink($route->uri(), $route->getAction('breadcrumb'))
+                    $route->uri() => new BreadcrumbLink($route->uri(), $route->getAction('breadcrumb')),
                 ];
             });
     }
@@ -95,7 +95,7 @@ class Breadcrumb
         $route = $this->request->route();
 
         if (! $route) {
-            return null;
+            return;
         }
 
         $actions = $route->getAction();
@@ -103,7 +103,7 @@ class Breadcrumb
         $title = $actions['breadcrumb'] ?? null;
 
         if (! $title) {
-            return null;
+            return;
         }
 
         return new BreadcrumbLink($this->request->path(), $title);
