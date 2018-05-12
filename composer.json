@@ -1,0 +1,52 @@
+{
+    "name": "fragkp/laravel-simple-breadcrumb",
+    "description": "",
+    "keywords": [
+        "laravel",
+        "breadcrumb"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Pohl"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "illuminate/routing": "~5.5.0|~5.6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.5.0|~3.6.0",
+        "orchestra/database": "~3.5.0|~3.6.0",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fragkp\\LaravelSimpleBreadcrumb\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Fragkp\\LaravelSimpleBreadcrumb\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Fragkp\\LaravelSimpleBreadcrumb\\BreadcrumbServiceProvider"
+            ],
+            "aliases": {
+                "Breadcrumb": "Fragkp\\LaravelSimpleBreadcrumb\\BreadcrumbServiceProvider\\Facades\\Breadcrumb"
+            }
+        }
+    }
+}
