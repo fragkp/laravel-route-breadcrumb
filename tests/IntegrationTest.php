@@ -257,7 +257,7 @@ class IntegrationTest extends TestCase
             return $foo->id;
         })->breadcrumb('First');
 
-        $this->get('/binding/1')->assertSuccessful()->assertSee(1);
+        $this->get('/binding/1')->assertSuccessful()->assertSee('1');
 
         $breadcrumbLinks = app(Breadcrumb::class)->links();
 
