@@ -14,7 +14,7 @@ class IntegrationTest extends TestCase
     protected static $controllerAction = 'Fragkp\\LaravelSimpleBreadcrumb\\Tests\\TestController@index';
 
     /** @test */
-    public function none()
+    public function it_not_changes_the_default_behavior()
     {
         Route::get('/foo', static::$controllerAction);
 
@@ -31,7 +31,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function not_found()
+    public function it_is_empty_when_no_route_is_found()
     {
         $this->get('/foo')->assertNotFound();
 
@@ -46,7 +46,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function errors()
+    public function it_is_empty_when_an_error_occurs()
     {
         Route::get('/foo', function () {
             throw new \Exception;
@@ -65,7 +65,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function errors_index()
+    public function it_returns_always_the_breadcrumb_index()
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -89,27 +89,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function simple()
-    {
-        Route::get('/foo', static::$controllerAction)->breadcrumb('First');
-
-        $this->get('/foo')->assertSuccessful();
-
-        $breadcrumbLinks = app(Breadcrumb::class)->links();
-
-        $this->assertCount(1, $breadcrumbLinks);
-        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
-        $this->assertEquals(new Collection([
-            'foo' => new BreadcrumbLink('foo', 'First'),
-        ]), $breadcrumbLinks);
-
-        $this->assertNull(app(Breadcrumb::class)->index());
-
-        $this->assertEquals(new BreadcrumbLink('foo', 'First'), app(Breadcrumb::class)->current());
-    }
-
-    /** @test */
-    public function simple_multi()
+    public function it_returns_only_the_matched_breadcrumb()
     {
         Route::get('/foo', static::$controllerAction)->breadcrumb('Foo');
         Route::get('/bar/camp', static::$controllerAction)->breadcrumb('Bar');
@@ -132,7 +112,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function index()
+    public function it_returns_only_the_matched_and_defined_index_breadcrumbs()
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
         Route::get('/foo', static::$controllerAction)->breadcrumb('First');
@@ -154,7 +134,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function multi_index_first()
+    public function it_returns_always_the_first_index()
     {
         Route::get('/bar', static::$controllerAction)->breadcrumbIndex('Start first');
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start second');
@@ -178,7 +158,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function inside_group()
+    public function it_returns_the_breadcrumb_inside_a_group()
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -203,7 +183,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function inside_group_with_group_prefix()
+    public function it_returns_the_breadcrumb_inside_a_group_with_the_group_index()
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -230,7 +210,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function nested_group_with_group_prefix()
+    public function it_can_handle_multiple_nested_groups()
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -267,7 +247,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function route_model_binding()
+    public function it_can_handle_route_model_binding()
     {
         $this->migrate();
 
@@ -291,7 +271,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function route_model_binding_multi()
+    public function it_can_handle_multiple_route_model_bindings_inside_groups()
     {
         $this->migrate();
 
@@ -331,9 +311,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-
-    /** @test */
-    public function custom_route_model_binding()
+    public function it_can_handle_custom_route_model_binding()
     {
         Route::bind('customBinding', function ($value) {
             return new CustomBinding($value);
