@@ -20,7 +20,7 @@ class BreadcrumbLink
      */
     public function __construct(string $uri, string $title)
     {
-        $this->uri   = $uri;
+        $this->uri = $uri;
         $this->title = $title;
     }
 }
