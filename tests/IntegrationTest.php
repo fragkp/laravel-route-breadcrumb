@@ -33,7 +33,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_is_empty_when_no_route_is_found()
     {
-        $this->get('/foo')->assertNotFound();
+        $this->get('/foo')->assertStatus(404);
 
         $breadcrumbLinks = app(Breadcrumb::class)->links();
 

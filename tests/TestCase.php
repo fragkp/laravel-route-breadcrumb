@@ -28,6 +28,6 @@ abstract class TestCase extends OrchestraTestCase
     {
         $this->loadMigrationsFrom(realpath(__DIR__.'/database/migrations'));
 
-        $this->loadFactoriesUsing($this->app, realpath(__DIR__.'/database/factories'));
+        $this->withFactories(realpath(__DIR__.'/database/factories'));
     }
 }
