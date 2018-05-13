@@ -1,17 +1,17 @@
 <?php
 
-namespace Fragkp\LaravelSimpleBreadcrumb\Tests;
+namespace Fragkp\LaravelRouteBreadcrumb\Tests;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
-use Fragkp\LaravelSimpleBreadcrumb\Breadcrumb;
-use Fragkp\LaravelSimpleBreadcrumb\BreadcrumbLink;
+use Fragkp\LaravelRouteBreadcrumb\Breadcrumb;
+use Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 
 class IntegrationTest extends TestCase
 {
-    protected static $controllerAction = 'Fragkp\\LaravelSimpleBreadcrumb\\Tests\\TestController@index';
+    protected static $controllerAction = 'Fragkp\\LaravelRouteBreadcrumb\\Tests\\TestController@index';
 
     /** @test */
     public function it_not_changes_the_default_behavior()

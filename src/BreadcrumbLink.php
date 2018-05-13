@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragkp\LaravelSimpleBreadcrumb;
+namespace Fragkp\LaravelRouteBreadcrumb;
 
 class BreadcrumbLink
 {

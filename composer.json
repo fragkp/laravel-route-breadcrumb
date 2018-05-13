@@ -1,8 +1,9 @@
 {
-    "name": "fragkp/laravel-simple-breadcrumb",
+    "name": "fragkp/laravel-route-breadcrumb",
     "description": "",
     "keywords": [
         "laravel",
+        "route",
         "breadcrumb"
     ],
     "license": "MIT",
@@ -22,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Fragkp\\LaravelSimpleBreadcrumb\\": "src"
+            "Fragkp\\LaravelRouteBreadcrumb\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Fragkp\\LaravelSimpleBreadcrumb\\Tests\\": "tests"
+            "Fragkp\\LaravelRouteBreadcrumb\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -42,10 +43,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Fragkp\\LaravelSimpleBreadcrumb\\BreadcrumbServiceProvider"
+                "Fragkp\\LaravelRouteBreadcrumb\\BreadcrumbServiceProvider"
             ],
             "aliases": {
-                "Breadcrumb": "Fragkp\\LaravelSimpleBreadcrumb\\BreadcrumbServiceProvider\\Facades\\Breadcrumb"
+                "Breadcrumb": "Fragkp\\LaravelRouteBreadcrumb\\BreadcrumbServiceProvider\\Facades\\Breadcrumb"
             }
         }
     }

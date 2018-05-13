@@ -1,7 +1,7 @@
 <?php
 
-use Fragkp\LaravelSimpleBreadcrumb\Tests\Bar;
-use Fragkp\LaravelSimpleBreadcrumb\Tests\Foo;
+use Fragkp\LaravelRouteBreadcrumb\Tests\Bar;
+use Fragkp\LaravelRouteBreadcrumb\Tests\Foo;
 
 /*
 |--------------------------------------------------------------------------

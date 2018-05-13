@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragkp\LaravelSimpleBreadcrumb\Tests;
+namespace Fragkp\LaravelRouteBreadcrumb\Tests;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
@@ -9,7 +9,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \Fragkp\LaravelSimpleBreadcrumb\BreadcrumbServiceProvider::class,
+            \Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider::class,
             \Orchestra\Database\ConsoleServiceProvider::class,
         ];
     }

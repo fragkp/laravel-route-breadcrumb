@@ -5,7 +5,7 @@
 [![StyleCI](https://styleci.io/repos/133180300/shield)](https://styleci.io/repos/133180300)
 [![Total Downloads](https://img.shields.io/packagist/dt/fragkp/laravel-route-breadcrumb.svg?style=flat-square)](https://packagist.org/packages/fragkp/laravel-route-breadcrumb)
 
-This package tries to solve a simple solution for breadcrumbs. Add breadcrumbs direct to your routes and display it in your views.
+This package tries to give a simple solution for breadcrumbs. Add breadcrumbs direct to your routes and display it in your views.
 
 ## Installation
 
@@ -20,13 +20,13 @@ Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add 
 If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
 
 ```php
-Fragkp\LaravelSimpleBreadcrumb\BreadcrumbServiceProvider::class,
+Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider::class,
 ```
 
 If you want also use the facade to access the main breadcrumb class, add this to your facades in app.php:
 
 ```php
-'Breadcrumb' => Fragkp\LaravelSimpleBreadcrumb\Facades\Breadcrumb::class,
+'Breadcrumb' => Fragkp\LaravelRouteBreadcrumb\Facades\Breadcrumb::class,
 ```
 
 ## Usage

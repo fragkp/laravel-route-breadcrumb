@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragkp\LaravelSimpleBreadcrumb\Facades;
+namespace Fragkp\LaravelRouteBreadcrumb\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -13,6 +13,6 @@ class Breadcrumb extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return \Fragkp\LaravelSimpleBreadcrumb\Breadcrumb::class;
+        return \Fragkp\LaravelRouteBreadcrumb\Breadcrumb::class;
     }
 }

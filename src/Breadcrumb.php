@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragkp\LaravelSimpleBreadcrumb;
+namespace Fragkp\LaravelRouteBreadcrumb;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -35,7 +35,7 @@ class Breadcrumb
     }
 
     /**
-     * @return \Fragkp\LaravelSimpleBreadcrumb\BreadcrumbLink|null
+     * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
      */
     public function index()
     {
@@ -88,7 +88,7 @@ class Breadcrumb
     }
 
     /**
-     * @return \Fragkp\LaravelSimpleBreadcrumb\BreadcrumbLink|null
+     * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
      */
     public function current()
     {
