@@ -5,7 +5,7 @@
 [![StyleCI](https://styleci.io/repos/133180300/shield)](https://styleci.io/repos/133180300)
 [![Total Downloads](https://img.shields.io/packagist/dt/fragkp/laravel-route-breadcrumb.svg?style=flat-square)](https://packagist.org/packages/fragkp/laravel-route-breadcrumb)
 
-This package tries to give a simple solution for breadcrumbs. Add breadcrumbs direct to your routes and display it in your views.
+This package tries to give a simple solution for breadcrumbs. Add breadcrumbs direct to your routes and display them in your views.
 
 ## Installation
 
@@ -17,13 +17,13 @@ composer require fragkp/laravel-route-breadcrumb
 
 Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
 
-If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
+If you don't use Auto-Discovery, add the ServiceProvider to the providers array in config/app.php
 
 ```php
 Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider::class,
 ```
 
-If you want also use the facade to access the main breadcrumb class, add this to your facades in app.php:
+If you want also use the facade to access the main breadcrumb class, add this line to your facades array in config/app.php:
 
 ```php
 'Breadcrumb' => Fragkp\LaravelRouteBreadcrumb\Facades\Breadcrumb::class,
@@ -42,7 +42,7 @@ Route::get('/')->breadcrumb('Your custom title');
 
 #### Index
 
-On some websites, you wish to have always an index inside your breadcrumb. Use the `breadcrumbIndex` method.
+On some websites, you wish to have always an index inside your breadcrumbs. Use the `breadcrumbIndex` method.
 **This method should only be used once.**
 > Note: `breadcrumbIndex` sets also the breadcrumb title for this route.
 ```php
@@ -53,7 +53,7 @@ Route::get('/foo')->breadcrumb('Your custom title');
 
 #### Inside groups
 
-Of course, `breadcrumb` will work inside route groups.
+The `breadcrumb` method will also work inside route groups.
 ```php
 Route::get('/')->breadcrumbIndex('Start');
 
@@ -61,11 +61,12 @@ Route::prefix('/foo')->group(function () {
     Route::get('/bar')->breadcrumb('Your custom title');
 });
 ```
-> Same result as above.
 
 #### Group index
 
 Also, it is possible to specify a group index title by calling `breadcrumbGroup`.
+**This method should only be used once inside a group.**
+> Note: `breadcrumbGroup` sets also the breadcrumb title for this route.
 ```php
 Route::get('/')->breadcrumbIndex('Start');
 
@@ -168,8 +169,8 @@ Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink {#36
 
 #### View example
 
-A good way to access the breadcrumb inside your views is to bound it via a View Composers.
-> For more information on View Composers, have a look on the [Laravel docs](https://laravel.com/docs/5.6/views#view-composers).
+A good way to access the breadcrumb inside your views is to bound it via a View Composer.
+> For more information about View Composers, have a look at the [Laravel docs](https://laravel.com/docs/5.6/views#view-composers).
 ```php
 // app/Providers/AppServiceProvider.php
 
@@ -177,7 +178,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        View::composer('breadcrumb', function ($view) {
+        View::composer('your-view', function ($view) {
             $view->with('breadcrumb', app(Breadcrumb::class)->links());
         });
     }
