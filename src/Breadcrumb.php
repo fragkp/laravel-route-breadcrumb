@@ -47,11 +47,12 @@ class Breadcrumb
             return;
         }
 
-        return new BreadcrumbLink(
-            $indexRoute->uri(), $indexRoute->getAction('breadcrumb')
-        );
+        return BreadcrumbLinkFactory::create($indexRoute->uri(), $indexRoute);
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     public function links()
     {
         $links = $this->groupLinks();
@@ -67,6 +68,9 @@ class Breadcrumb
         return $links;
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     protected function groupLinks()
     {
         $groupPrefixes = $this->groupPrefixes(
@@ -81,9 +85,7 @@ class Breadcrumb
                 return $route->getAction('breadcrumb') && $route->getAction('breadcrumbGroup');
             })
             ->mapWithKeys(function (Route $route) {
-                return [
-                    $route->uri() => new BreadcrumbLink($route->uri(), $route->getAction('breadcrumb')),
-                ];
+                return [$route->uri() => BreadcrumbLinkFactory::create($route->uri(), $route)];
             });
     }
 
@@ -98,19 +100,15 @@ class Breadcrumb
             return;
         }
 
-        $actions = $route->getAction();
-
-        $title = $actions['breadcrumb'] ?? null;
-
-        if (! $title) {
+        if (! isset($route->getAction()['breadcrumb'])) {
             return;
         }
 
-        return new BreadcrumbLink($this->request->path(), $title);
+        return BreadcrumbLinkFactory::create($this->request->path(), $route);
     }
 
     /**
-     * @return \Illuminate\Routing\Route[]|\Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection|\Illuminate\Routing\Route[]
      */
     protected function routes()
     {

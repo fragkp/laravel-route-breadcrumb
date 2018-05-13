@@ -18,9 +18,9 @@ class BreadcrumbLink
      * @param string $uri
      * @param string $title
      */
-    public function __construct(string $uri, string $title)
+    public function __construct(string $uri, $title)
     {
-        $this->uri = $uri;
+        $this->uri   = $uri;
         $this->title = $title;
     }
 }

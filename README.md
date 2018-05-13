@@ -31,18 +31,168 @@ If you want also use the facade to access the main breadcrumb class, add this to
 
 ## Usage
 
+### Defining breadcrumbs
+
+#### Basic
+
+To add a breadcrumb title to your route, call the `breadcrumb` method and pass your title. 
 ```php
-TODO
+Route::get('/')->breadcrumb('Your custom title');
+```
 
-Route::get('/')->breadcrumbIndex('Index');
+#### Index
 
-Route::get('/foo')->breadcrumb('Foo');
+On some websites, you wish to have always an index inside your breadcrumb. Use the `breadcrumbIndex` method.
+**This method should only be used once.**
+> Note: `breadcrumbIndex` sets also the breadcrumb title for this route.
+```php
+Route::get('/')->breadcrumbIndex('Start');
 
-Route::prefix('/bar')->function () {
-    Route::get('/')->breadcrumbGroup('Bar index');
+Route::get('/foo')->breadcrumb('Your custom title');
+```
 
-    Route::get('/zoo')->breadcrumb('Zoo');
+#### Inside groups
+
+Of course, `breadcrumb` will work inside route groups.
+```php
+Route::get('/')->breadcrumbIndex('Start');
+
+Route::prefix('/foo')->group(function () {
+    Route::get('/bar')->breadcrumb('Your custom title');
 });
+```
+> Same result as above.
+
+#### Group index
+
+Also, it is possible to specify a group index title by calling `breadcrumbGroup`.
+```php
+Route::get('/')->breadcrumbIndex('Start');
+
+Route::prefix('/foo')->group(function () {
+    Route::get('/')->breadcrumbGroup('Foo group index');
+
+    Route::get('/bar')->breadcrumb('Your custom title');
+});
+```
+
+#### Custom title resolver
+
+If you want to customize your breadcrumb title, you could pass a closure to all breadcrumb methods.
+```php
+Route::get('/')->breadcrumb(function () {
+    return 'Your custom title';
+});
+```
+
+You could also pass a fully qualified class name. This will invoke your class.
+```php
+Route::get('/')->breadcrumb(YourCustomTitleResolver::class);
+
+class YourCustomTitleResolver
+{
+    public function __invoke()
+    {
+        return 'Your custom title';
+    }
+}
+```
+
+##### Route parameters
+
+All route parameters will be passed to your resolver. Route model binding is also supported.
+```php
+Route::get('/{foo}')->breadcrumb(YourCustomTitleResolver::class);
+
+class YourCustomTitleResolver
+{
+    public function __invoke(Foo $foo)
+    {
+        return "Title: {$foo->title}";
+    }
+}
+```
+
+### Accessing breadcrumb
+
+#### Links
+
+The `links` method will return a `Collection` of `BreadcrumbLink`.
+> Note: The array is indexed by the uri.
+```php
+app(Breadcrumb::class)->links(); // or use here the facade
+```
+Example result:
+```php
+Illuminate\Support\Collection {#266
+    #items: array:2 [
+        "/" => Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink {#41
+            +uri: "/"
+            +title: "Start"
+        }
+        "foo" => Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink {#262
+            +uri: "foo"
+            +title: "Your custom title"
+        }
+    ]
+}
+```
+
+#### Index
+
+The `index` method will return a single instance of `BreadcrumbLink`. If you haven't defined any index, null is returned.
+```php
+app(Breadcrumb::class)->index(); // or use here the facade
+```
+Example result:
+```php
+Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink {#36
+    +uri: "/"
+    +title: "Start"
+}
+```
+
+#### Current
+
+The `current` method will return a single instance of `BreadcrumbLink`. If no route is provided (e.g. on errors), null is returned.
+```php
+app(Breadcrumb::class)->current(); // or use here the facade
+```
+Example result:
+```php
+Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink {#36
+    +uri: "/"
+    +title: "Your custom title"
+}
+```
+
+#### View example
+
+A good way to access the breadcrumb inside your views is to bound it via a View Composers.
+> For more information on View Composers, have a look on the [Laravel docs](https://laravel.com/docs/5.6/views#view-composers).
+```php
+// app/Providers/AppServiceProvider.php
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        View::composer('breadcrumb', function ($view) {
+            $view->with('breadcrumb', app(Breadcrumb::class)->links());
+        });
+    }
+}
+```
+```php
+// resources/views/breadcrumb.blade.php
+
+<ul>
+    @foreach ($breadcrumb as $link)
+        <li>
+            <a href="{{ url($link->uri) }}">{{ $link->title }}</a>
+        </li>
+    @endforeach
+</ul>
 ```
 
 ## Testing
@@ -51,9 +201,6 @@ Route::prefix('/bar')->function () {
 ./vendor/bin/phpunit
 ```
 
-## ToDo
-- [ ] Add ability to resolve route model binding values inside breadcrumb titles.
-
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+MIT License (MIT). Please see [License File](LICENSE.md) for more information.

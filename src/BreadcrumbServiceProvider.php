@@ -25,7 +25,7 @@ class BreadcrumbServiceProvider extends ServiceProvider
     public function register()
     {
         if (! Route::hasMacro('breadcrumb')) {
-            Route::macro('breadcrumb', function (string $title) {
+            Route::macro('breadcrumb', function ($title) {
                 $this->action['breadcrumb'] = $title;
 
                 return $this;
@@ -33,7 +33,7 @@ class BreadcrumbServiceProvider extends ServiceProvider
         }
 
         if (! Route::hasMacro('breadcrumbIndex')) {
-            Route::macro('breadcrumbIndex', function (string $title) {
+            Route::macro('breadcrumbIndex', function ($title) {
                 $this->action['breadcrumbIndex'] = true;
                 $this->action['breadcrumb'] = $title;
 
@@ -42,7 +42,7 @@ class BreadcrumbServiceProvider extends ServiceProvider
         }
 
         if (! Route::hasMacro('breadcrumbGroup')) {
-            Route::macro('breadcrumbGroup', function (string $title) {
+            Route::macro('breadcrumbGroup', function ($title) {
                 $this->action['breadcrumbGroup'] = true;
                 $this->action['breadcrumb'] = $title;
 
