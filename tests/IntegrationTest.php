@@ -454,7 +454,7 @@ class IntegrationTest extends TestCase
         $this->assertCount(2, $breadcrumbLinks);
         $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
         $this->assertEquals(new Collection([
-            'binding/foo'     => new BreadcrumbLink('binding/foo',    'foo'),
+            'binding/foo'     => new BreadcrumbLink('binding/foo', 'foo'),
             'binding/foo/bar' => new BreadcrumbLink('binding/foo/bar', 'foo-bar'),
         ]), $breadcrumbLinks);
 
