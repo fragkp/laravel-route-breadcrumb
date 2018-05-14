@@ -441,9 +441,9 @@ class IntegrationTest extends TestCase
             });
 
             Route::get('/binding/{customBinding}/{secondBinding}', function (CustomBinding $customBinding, SecondBinding $secondBinding) {
-                return $customBinding->value . '-' . $secondBinding->value;
+                return $customBinding->value.'-'.$secondBinding->value;
             })->breadcrumb(function (CustomBinding $customBinding, SecondBinding $secondBinding) {
-                return $customBinding->value . '-' . $secondBinding->value;
+                return $customBinding->value.'-'.$secondBinding->value;
             });
         });
 

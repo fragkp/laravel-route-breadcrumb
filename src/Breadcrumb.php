@@ -73,19 +73,25 @@ class Breadcrumb
      */
     protected function groupLinks()
     {
-        $groupPrefixes = $this->groupPrefixes(
+        $pathPrefixes = $this->groupPrefixes(
             $this->request->path()
         );
 
+        $routeUriPrefixes = $this->groupPrefixes(
+            optional($this->request->route())->uri() ?? ''
+        );
+
         return $this->routes()
-            ->filter(function (Route $route) use ($groupPrefixes) {
-                return in_array($route->uri(), $groupPrefixes, true);
+            ->filter(function (Route $route) use ($routeUriPrefixes) {
+                return in_array($route->uri(), $routeUriPrefixes, true);
             })
             ->filter(function (Route $route) {
                 return $route->getAction('breadcrumb') && $route->getAction('breadcrumbGroup');
             })
-            ->mapWithKeys(function (Route $route) {
-                return [$route->uri() => BreadcrumbLinkFactory::create($route->uri(), $route)];
+            ->mapWithKeys(function (Route $route) use ($routeUriPrefixes, $pathPrefixes) {
+                $routeUri = $pathPrefixes[array_search($route->uri(), $routeUriPrefixes, true)];
+
+                return [$routeUri => BreadcrumbLinkFactory::create($routeUri, $this->bindParameters($route))];
             });
     }
 
@@ -132,5 +138,26 @@ class Breadcrumb
         return array_map(function ($prefix) {
             return rtrim($prefix, '/');
         }, $prefixes);
+    }
+
+    /**
+     * @param \Illuminate\Routing\Route $route
+     * @return \Illuminate\Routing\Route
+     */
+    protected function bindParameters(Route $route)
+    {
+        $compiledRouteParameters = $route->getCompiled()->getVariables();
+
+        if (! empty($compiledRouteParameters)) {
+            $currentParameters = $this->request->route()->parameters();
+
+            $route->bind(new Request);
+
+            foreach (array_only($currentParameters, $compiledRouteParameters) as $name => $parameter) {
+                $route->setParameter($name, $parameter);
+            }
+        }
+
+        return $route;
     }
 }
