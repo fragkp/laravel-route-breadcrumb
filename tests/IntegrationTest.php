@@ -421,6 +421,45 @@ class IntegrationTest extends TestCase
 
         $this->assertEquals(new BreadcrumbLink('binding/foo', 'First'), app(Breadcrumb::class)->current());
     }
+
+    /** @test */
+    public function it_can_handle_nested_route_parameters_with_route_model_binding_for_group_index()
+    {
+        Route::bind('customBinding', function ($value) {
+            return new CustomBinding($value);
+        });
+
+        Route::bind('secondBinding', function ($value) {
+            return new SecondBinding($value);
+        });
+
+        Route::middleware(SubstituteBindings::class)->group(function () {
+            Route::get('/binding/{customBinding}', function (CustomBinding $customBinding) {
+                return $customBinding->value;
+            })->breadcrumbGroup(function (CustomBinding $customBinding) {
+                return $customBinding->value;
+            });
+
+            Route::get('/binding/{customBinding}/{secondBinding}', function (CustomBinding $customBinding, SecondBinding $secondBinding) {
+                return $customBinding->value . '-' . $secondBinding->value;
+            })->breadcrumb(function (CustomBinding $customBinding, SecondBinding $secondBinding) {
+                return $customBinding->value . '-' . $secondBinding->value;
+            });
+        });
+
+        $this->get('/binding/foo/bar')->assertSuccessful()->assertSee('foo-bar');
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(2, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            'binding/foo'     => new BreadcrumbLink('binding/foo',    'foo'),
+            'binding/foo/bar' => new BreadcrumbLink('binding/foo/bar', 'foo-bar'),
+        ]), $breadcrumbLinks);
+
+        $this->assertEquals(new BreadcrumbLink('binding/foo/bar', 'foo-bar'), app(Breadcrumb::class)->current());
+    }
 }
 
 class TestController
@@ -442,6 +481,14 @@ class Bar extends Model
 }
 
 class CustomBinding
+{
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
+}
+
+class SecondBinding
 {
     public function __construct($value)
     {
