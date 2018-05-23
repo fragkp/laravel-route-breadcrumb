@@ -460,6 +460,102 @@ class IntegrationTest extends TestCase
 
         $this->assertEquals(new BreadcrumbLink('binding/foo/bar', 'foo-bar'), app(Breadcrumb::class)->current());
     }
+
+    /** @test */
+    public function it_returns_the_index_when_nested_routes_with_parameters_doesnt_match_route_binding_current()
+    {
+        Route::bind('customBinding', function ($value) {
+            return new CustomBinding($value);
+        });
+
+        Route::bind('secondBinding', function ($value) {
+            return abort(404);
+        });
+
+        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+
+        Route::middleware(SubstituteBindings::class)->group(function () {
+            Route::get('/binding/{customBinding}', function (CustomBinding $customBinding) {
+                return $customBinding->value;
+            })->breadcrumbGroup(function (CustomBinding $customBinding) {
+                return $customBinding->value;
+            });
+
+            Route::get('/binding/{customBinding}/{parameter}', function (CustomBinding $customBinding, $parameters) {
+                return $customBinding->value.'-'.$parameters;
+            })->breadcrumb(function (CustomBinding $customBinding, $parameters) {
+                return $customBinding->value.'-'.$parameters;
+            });
+
+            Route::get('/binding/{customBinding}/{parameter}/{secondBinding}', function (CustomBinding $customBinding, int $parameter, SecondBinding $secondBinding) {
+                return $customBinding->value.'-'.$parameter.'-'.$secondBinding->value;
+            })->breadcrumb(function (CustomBinding $customBinding, int $parameter, SecondBinding $secondBinding) {
+                return $customBinding->value.'-'.$parameter.'-'.$secondBinding->value;
+            });
+        });
+
+        $this->get('/binding/foo/bar/baz')->assertStatus(404);
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(1, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            '/' => new BreadcrumbLink('/', 'Start'),
+        ]), $breadcrumbLinks);
+
+        $this->assertNull(app(Breadcrumb::class)->current());
+
+        $this->assertEquals(new BreadcrumbLink('/', 'Start'), app(Breadcrumb::class)->index());
+    }
+
+    /** @test */
+    public function it_returns_the_index_when_nested_routes_with_parameters_doesnt_match_route_binding_links()
+    {
+        Route::bind('customBinding', function ($value) {
+            return new CustomBinding($value);
+        });
+
+        Route::bind('secondBinding', function ($value) {
+            return abort(404);
+        });
+
+        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+
+        Route::middleware(SubstituteBindings::class)->group(function () {
+            Route::get('/binding/{customBinding}', function (CustomBinding $customBinding) {
+                return $customBinding->value;
+            })->breadcrumbGroup(function (CustomBinding $customBinding) {
+                return $customBinding->value;
+            });
+
+            Route::get('/binding/{customBinding}/{secondBinding}', function (CustomBinding $customBinding, SecondBinding $secondBinding) {
+                return $customBinding->value.'-'.$secondBinding->value;
+            })->breadcrumb(function (CustomBinding $customBinding, SecondBinding $secondBinding) {
+                return $customBinding->value.'-'.$secondBinding->value;
+            });
+
+            Route::get('/binding/{customBinding}/{secondBinding}/{parameter}', function (CustomBinding $customBinding, SecondBinding $secondBinding, int $parameter) {
+                return $customBinding->value.'-'.$secondBinding->value.'-'.$parameter;
+            })->breadcrumb(function (CustomBinding $customBinding, SecondBinding $secondBinding, int $parameter) {
+                return $customBinding->value.'-'.$secondBinding->value.'-'.$parameter;
+            });
+        });
+
+        $this->get('/binding/foo/bar/baz')->assertStatus(404);
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(1, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            '/' => new BreadcrumbLink('/', 'Start'),
+        ]), $breadcrumbLinks);
+
+        $this->assertNull(app(Breadcrumb::class)->current());
+
+        $this->assertEquals(new BreadcrumbLink('/', 'Start'), app(Breadcrumb::class)->index());
+    }
 }
 
 class TestController

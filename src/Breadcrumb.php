@@ -65,6 +65,10 @@ class Breadcrumb
             $links->put($currentLink->uri, $currentLink);
         }
 
+        if ($indexLink && is_null($currentLink)) {
+            return Collection::make([$indexLink->uri => $indexLink]);
+        }
+
         return $links;
     }
 

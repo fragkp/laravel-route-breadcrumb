@@ -3,6 +3,7 @@
 namespace Fragkp\LaravelRouteBreadcrumb;
 
 use Closure;
+use TypeError;
 use Illuminate\Routing\Route;
 
 class BreadcrumbLinkFactory
@@ -10,14 +11,20 @@ class BreadcrumbLinkFactory
     /**
      * @param string                    $uri
      * @param \Illuminate\Routing\Route $route
-     * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink
+     * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
      */
     public static function create(string $uri, Route $route)
     {
-        return new BreadcrumbLink($uri, static::resolveTitle(
-            $route->getAction('breadcrumb'),
-            static::routeParameters($route)
-        ));
+        try {
+            $resolvedTitle = static::resolveTitle(
+                $route->getAction('breadcrumb'),
+                static::routeParameters($route)
+            );
+        } catch (TypeError $error) {
+            return null;
+        }
+
+        return new BreadcrumbLink($uri, $resolvedTitle);
     }
 
     /**
