@@ -37,7 +37,7 @@ class BreadcrumbLinkFactory
                 static::routeParameters($route)
             );
         } catch (TypeError $error) {
-            return null;
+            return;
         }
 
         return new BreadcrumbLink($uri, $resolvedTitle);
