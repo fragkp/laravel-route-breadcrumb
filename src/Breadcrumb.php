@@ -47,7 +47,7 @@ class Breadcrumb
             return;
         }
 
-        return BreadcrumbLinkFactory::create($indexRoute->uri(), $indexRoute);
+        return app(BreadcrumbLinkFactory::class)->create($indexRoute->uri(), $indexRoute);
     }
 
     /**
@@ -95,7 +95,7 @@ class Breadcrumb
             ->mapWithKeys(function (Route $route) use ($routeUriPrefixes, $pathPrefixes) {
                 $routeUri = $pathPrefixes[array_search($route->uri(), $routeUriPrefixes, true)];
 
-                return [$routeUri => BreadcrumbLinkFactory::create($routeUri, $this->bindParameters($route))];
+                return [$routeUri => app(BreadcrumbLinkFactory::class)->create($routeUri, $route)];
             });
     }
 
@@ -106,15 +106,11 @@ class Breadcrumb
     {
         $route = $this->request->route();
 
-        if (! $route) {
+        if (! $route || ! isset($route->getAction()['breadcrumb'])) {
             return;
         }
 
-        if (! isset($route->getAction()['breadcrumb'])) {
-            return;
-        }
-
-        return BreadcrumbLinkFactory::create($this->request->path(), $route);
+        return app(BreadcrumbLinkFactory::class)->create($this->request->path(), $route);
     }
 
     /**
@@ -142,26 +138,5 @@ class Breadcrumb
         return array_map(function ($prefix) {
             return rtrim($prefix, '/');
         }, $prefixes);
-    }
-
-    /**
-     * @param \Illuminate\Routing\Route $route
-     * @return \Illuminate\Routing\Route
-     */
-    protected function bindParameters(Route $route)
-    {
-        $compiledRouteParameters = $route->getCompiled()->getVariables();
-
-        if (! empty($compiledRouteParameters)) {
-            $currentParameters = $this->request->route()->parameters();
-
-            $route->bind(new Request);
-
-            foreach (array_only($currentParameters, $compiledRouteParameters) as $name => $parameter) {
-                $route->setParameter($name, $parameter);
-            }
-        }
-
-        return $route;
     }
 }
