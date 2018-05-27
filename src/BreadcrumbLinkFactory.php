@@ -27,7 +27,7 @@ class BreadcrumbLinkFactory
      * @param \Illuminate\Routing\Route $route
      * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
      */
-    public function create(string $uri, Route $route)
+    public function create(string $uri, Route $route): ?BreadcrumbLink
     {
         $route = RouteParameterBinder::bind($this->request, $route);
 
@@ -37,7 +37,7 @@ class BreadcrumbLinkFactory
                 static::routeParameters($route)
             );
         } catch (TypeError $error) {
-            return;
+            return null;
         }
 
         return new BreadcrumbLink($uri, $resolvedTitle);
@@ -47,7 +47,7 @@ class BreadcrumbLinkFactory
      * @param \Illuminate\Routing\Route $route
      * @return array
      */
-    protected static function routeParameters(Route $route)
+    protected static function routeParameters(Route $route): array
     {
         return $route->hasParameters()
             ? array_values($route->parameters())
@@ -59,7 +59,7 @@ class BreadcrumbLinkFactory
      * @param array           $parameters
      * @return string
      */
-    protected static function resolveTitle($title, array $parameters)
+    protected static function resolveTitle($title, array $parameters): string
     {
         if ($title instanceof Closure) {
             return $title(...$parameters);

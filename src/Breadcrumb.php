@@ -37,14 +37,14 @@ class Breadcrumb
     /**
      * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
      */
-    public function index()
+    public function index(): ?BreadcrumbLink
     {
         $indexRoute = $this->routes()->first(function (Route $route) {
             return $route->getAction('breadcrumbIndex');
         });
 
         if (! $indexRoute) {
-            return;
+            return null;
         }
 
         return app(BreadcrumbLinkFactory::class)->create($indexRoute->uri(), $indexRoute);
@@ -53,7 +53,7 @@ class Breadcrumb
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function links()
+    public function links(): Collection
     {
         $links = $this->groupLinks();
 
@@ -75,7 +75,7 @@ class Breadcrumb
     /**
      * @return \Illuminate\Support\Collection
      */
-    protected function groupLinks()
+    protected function groupLinks(): Collection
     {
         $pathPrefixes = $this->groupPrefixes(
             $this->request->path()
@@ -102,12 +102,12 @@ class Breadcrumb
     /**
      * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
      */
-    public function current()
+    public function current(): ?BreadcrumbLink
     {
         $route = $this->request->route();
 
         if (! $route || ! isset($route->getAction()['breadcrumb'])) {
-            return;
+            return null;
         }
 
         return app(BreadcrumbLinkFactory::class)->create($this->request->path(), $route);
@@ -127,7 +127,7 @@ class Breadcrumb
      * @param string $currentPath
      * @return array
      */
-    protected function groupPrefixes(string $currentPath)
+    protected function groupPrefixes(string $currentPath): array
     {
         $prefixes = array_map(function ($prefix) use ($currentPath) {
             return str_before($currentPath, $prefix);

@@ -6,7 +6,7 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             \Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider::class,
@@ -14,7 +14,7 @@ abstract class TestCase extends OrchestraTestCase
         ];
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
@@ -24,7 +24,7 @@ abstract class TestCase extends OrchestraTestCase
         ]);
     }
 
-    protected function migrate()
+    protected function migrate(): void
     {
         $this->loadMigrationsFrom(realpath(__DIR__.'/database/migrations'));
 

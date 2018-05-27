@@ -12,7 +12,7 @@ class RouteParameterBinder
      * @param \Illuminate\Routing\Route $route
      * @return \Illuminate\Routing\Route
      */
-    public static function bind(Request $request, Route $route)
+    public static function bind(Request $request, Route $route): Route
     {
         $compiledRouteParameters = $route->getCompiled()->getVariables();
 

@@ -12,7 +12,7 @@ class BreadcrumbServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->app->singleton(Breadcrumb::class);
     }
@@ -22,7 +22,7 @@ class BreadcrumbServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         if (! Route::hasMacro('breadcrumb')) {
             Route::macro('breadcrumb', function ($title) {
