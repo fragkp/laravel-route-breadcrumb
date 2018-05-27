@@ -14,7 +14,7 @@ class IntegrationTest extends TestCase
     protected static $controllerAction = 'Fragkp\\LaravelRouteBreadcrumb\\Tests\\TestController@index';
 
     /** @test */
-    public function it_not_changes_the_default_behavior()
+    public function it_not_changes_the_default_behavior(): void
     {
         Route::get('/foo', static::$controllerAction);
 
@@ -31,7 +31,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_is_empty_when_no_route_is_found()
+    public function it_is_empty_when_no_route_is_found(): void
     {
         $this->get('/foo')->assertStatus(404);
 
@@ -46,7 +46,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_is_empty_when_an_error_occurs()
+    public function it_is_empty_when_an_error_occurs(): void
     {
         Route::get('/foo', function () {
             throw new \Exception;
@@ -65,7 +65,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_always_the_breadcrumb_index()
+    public function it_returns_always_the_breadcrumb_index(): void
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -89,7 +89,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_only_the_matched_breadcrumb()
+    public function it_returns_only_the_matched_breadcrumb(): void
     {
         Route::get('/foo', static::$controllerAction)->breadcrumb('Foo');
         Route::get('/bar/camp', static::$controllerAction)->breadcrumb('Bar');
@@ -112,7 +112,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_only_the_matched_and_defined_index_breadcrumbs()
+    public function it_returns_only_the_matched_and_defined_index_breadcrumbs(): void
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
         Route::get('/foo', static::$controllerAction)->breadcrumb('First');
@@ -134,7 +134,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_always_the_first_index()
+    public function it_returns_always_the_first_index(): void
     {
         Route::get('/bar', static::$controllerAction)->breadcrumbIndex('Start first');
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start second');
@@ -158,7 +158,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_the_breadcrumb_title_by_closure()
+    public function it_can_handle_the_breadcrumb_title_by_closure(): void
     {
         Route::get('/foo', static::$controllerAction)->breadcrumb(function () {
             return 'Closure title';
@@ -178,7 +178,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_the_breadcrumb_title_by_custom_class()
+    public function it_can_handle_the_breadcrumb_title_by_custom_class(): void
     {
         Route::get('/foo', static::$controllerAction)->breadcrumb(CustomTitleResolver::class);
 
@@ -196,7 +196,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_the_breadcrumb_inside_a_group()
+    public function it_returns_the_breadcrumb_inside_a_group(): void
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -221,7 +221,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_the_breadcrumb_inside_a_group_with_the_group_index()
+    public function it_returns_the_breadcrumb_inside_a_group_with_the_group_index(): void
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -248,7 +248,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_multiple_nested_groups()
+    public function it_can_handle_multiple_nested_groups(): void
     {
         Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
 
@@ -285,7 +285,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_route_model_binding()
+    public function it_can_handle_route_model_binding(): void
     {
         $this->migrate();
 
@@ -309,7 +309,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_route_model_binding_and_resolves_title_by_closure()
+    public function it_can_handle_route_model_binding_and_resolves_title_by_closure(): void
     {
         $this->migrate();
 
@@ -335,7 +335,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_route_model_binding_and_resolves_title_by_custom_class()
+    public function it_can_handle_route_model_binding_and_resolves_title_by_custom_class(): void
     {
         $this->migrate();
 
@@ -359,7 +359,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_multiple_route_model_bindings_inside_groups()
+    public function it_can_handle_multiple_route_model_bindings_inside_groups(): void
     {
         $this->migrate();
 
@@ -399,7 +399,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_custom_route_model_binding()
+    public function it_can_handle_custom_route_model_binding(): void
     {
         Route::bind('customBinding', function ($value) {
             return new CustomBinding($value);
@@ -423,7 +423,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_nested_route_parameters_with_route_model_binding_for_group_index()
+    public function it_can_handle_nested_route_parameters_with_route_model_binding_for_group_index(): void
     {
         Route::bind('customBinding', function ($value) {
             return new CustomBinding($value);
@@ -462,7 +462,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_the_index_when_nested_routes_with_parameters_doesnt_match_route_binding_current()
+    public function it_returns_the_index_when_nested_routes_with_parameters_doesnt_match_route_binding_current(): void
     {
         Route::bind('customBinding', function ($value) {
             return new CustomBinding($value);
@@ -510,7 +510,7 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_the_index_when_nested_routes_with_parameters_doesnt_match_route_binding_links()
+    public function it_returns_the_index_when_nested_routes_with_parameters_doesnt_match_route_binding_links(): void
     {
         Route::bind('customBinding', function ($value) {
             return new CustomBinding($value);
@@ -560,7 +560,7 @@ class IntegrationTest extends TestCase
 
 class TestController
 {
-    public function index()
+    public function index(): string
     {
         return 'test';
     }
@@ -594,7 +594,7 @@ class SecondBinding
 
 class CustomTitleResolver
 {
-    public function __invoke()
+    public function __invoke(): string
     {
         return 'Class title';
     }
@@ -602,7 +602,7 @@ class CustomTitleResolver
 
 class CustomRouteModelBindingTitleResolver
 {
-    public function __invoke(Foo $foo)
+    public function __invoke(Foo $foo): string
     {
         return "Id: {$foo->id}";
     }
