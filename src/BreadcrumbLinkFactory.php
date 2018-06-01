@@ -65,8 +65,12 @@ class BreadcrumbLinkFactory
             return $title(...$parameters);
         }
 
-        if (class_exists($title)) {
+        if (\is_string($title) && \class_exists($title)) {
             return app($title)(...$parameters);
+        }
+
+        if (\is_array($title) && \is_callable($title)) {
+            return $title(...$parameters);
         }
 
         return $title;

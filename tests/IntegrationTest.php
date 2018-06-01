@@ -178,6 +178,46 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
+    public function it_can_handle_the_breadcrumb_title_by_callable()
+    {
+        $resolver = new CustomTitleResolver();
+
+        Route::get('/foo', static::$controllerAction)->breadcrumb([$resolver, 'getTitle']);
+
+        $this->get('/foo')->assertSuccessful();
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(1, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            'foo' => new BreadcrumbLink('foo', 'Custom title'),
+        ]), $breadcrumbLinks);
+
+        $this->assertEquals(new BreadcrumbLink('foo', 'Custom title'), app(Breadcrumb::class)->current());
+    }
+
+    /** @test */
+    public function it_can_handle_the_breadcrumb_title_by_callable_with_parameters()
+    {
+        $resolver = new CustomTitleResolver();
+
+        Route::get('/products/{category}/{name}', static::$controllerAction)->breadcrumb([$resolver, 'getTitleWithParameters']);
+
+        $this->get('/products/shirts/foo')->assertSuccessful();
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(1, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            'products/shirts/foo' => new BreadcrumbLink('products/shirts/foo', 'Custom title: shirts > foo'),
+        ]), $breadcrumbLinks);
+
+        $this->assertEquals(new BreadcrumbLink('products/shirts/foo', 'Custom title: shirts > foo'), app(Breadcrumb::class)->current());
+    }
+
+    /** @test */
     public function it_can_handle_the_breadcrumb_title_by_custom_class()
     {
         Route::get('/foo', static::$controllerAction)->breadcrumb(CustomTitleResolver::class);
@@ -332,6 +372,32 @@ class IntegrationTest extends TestCase
         ]), $breadcrumbLinks);
 
         $this->assertEquals(new BreadcrumbLink('binding/1', 'Id: 1'), app(Breadcrumb::class)->current());
+    }
+
+    /** @test */
+    public function it_can_handle_route_model_binding_and_resolves_title_by_callable()
+    {
+        $this->migrate();
+
+        factory(Foo::class, 1)->create();
+
+        $resolver = new CustomTitleResolver();
+
+        Route::middleware(SubstituteBindings::class)->get('/binding/{foo}', function (Foo $foo) {
+            return $foo->id;
+        })->breadcrumb([$resolver, 'getTitleFromModel']);
+
+        $this->get('/binding/1')->assertSuccessful()->assertSee('1');
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(1, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            'binding/1' => new BreadcrumbLink('binding/1', 'Custom title: 1'),
+        ]), $breadcrumbLinks);
+
+        $this->assertEquals(new BreadcrumbLink('binding/1', 'Custom title: 1'), app(Breadcrumb::class)->current());
     }
 
     /** @test */
@@ -597,6 +663,21 @@ class CustomTitleResolver
     public function __invoke()
     {
         return 'Class title';
+    }
+
+    public function getTitle()
+    {
+        return 'Custom title';
+    }
+
+    public function getTitleWithParameters(...$params)
+    {
+        return 'Custom title: '.\implode(' > ', $params);
+    }
+
+    public function getTitleFromModel(Foo $foo)
+    {
+        return "Custom title: {$foo->id}";
     }
 }
 
