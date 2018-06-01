@@ -672,7 +672,7 @@ class CustomTitleResolver
 
     public function getTitleWithParameters(...$params)
     {
-        return 'Custom title: ' . \implode(' > ', $params);
+        return 'Custom title: '.\implode(' > ', $params);
     }
 
     public function getTitleFromModel(Foo $foo)
