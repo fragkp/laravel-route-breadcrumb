@@ -99,6 +99,22 @@ class YourCustomTitleResolver
 }
 ```
 
+You may also pass a callable.
+```php
+Route::get('/foo/{id}')->breadcrumb([app('my_breadcrumb_resolver'), 'resolve']);
+
+// my_breadcrumb_resolver
+class MyBreadcrumbResolver
+{
+    public function resolve($id)
+    {
+        $title = $this->repo->findById($id);
+        
+        return $title->getName();
+    }
+}
+```
+
 ##### Route parameters
 
 All route parameters will be passed to your resolver. Route model binding is also supported.
