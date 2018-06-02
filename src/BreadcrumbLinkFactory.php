@@ -55,8 +55,8 @@ class BreadcrumbLinkFactory
     }
 
     /**
-     * @param string|\Closure $title
-     * @param array           $parameters
+     * @param string|callable|\Closure $title
+     * @param array                    $parameters
      * @return string
      */
     protected static function resolveTitle($title, array $parameters)
@@ -65,11 +65,11 @@ class BreadcrumbLinkFactory
             return $title(...$parameters);
         }
 
-        if (\is_string($title) && \class_exists($title)) {
+        if (is_string($title) && class_exists($title)) {
             return app($title)(...$parameters);
         }
 
-        if (\is_array($title) && \is_callable($title)) {
+        if (is_array($title) && is_callable($title)) {
             return $title(...$parameters);
         }
 
