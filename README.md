@@ -79,7 +79,7 @@ Route::prefix('/foo')->group(function () {
 
 #### Custom title resolver
 
-If you want to customize your breadcrumb title, you could pass a closure or callback to all breadcrumb methods.
+If you want to customize your breadcrumb title, you could pass a closure to all breadcrumb methods.
 ```php
 Route::get('/')->breadcrumb(function () {
     return 'Your custom title';
@@ -95,6 +95,22 @@ class YourCustomTitleResolver
     public function __invoke()
     {
         return 'Your custom title';
+    }
+}
+```
+
+You may also pass a callable.
+```php
+Route::get('/foo/{id}')->breadcrumb([app('my_breadcrumb_resolver'), 'resolve']);
+
+// my_breadcrumb_resolver
+class MyBreadcrumbResolver
+{
+    public function resolve($id)
+    {
+        $title = $this->repo->findById($id);
+        
+        return $title->getName();
     }
 }
 ```
