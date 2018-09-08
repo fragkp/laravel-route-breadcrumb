@@ -19,8 +19,8 @@ class TemplateTest extends TestCase
     /** @test */
     public function it_returns_the_correct_bootstrap_3_template()
     {
-        Route::get('/', function (){})->breadcrumbIndex('Start');
-        Route::get('/foo', function (){})->breadcrumb('First');
+        Route::get('/', TestTemplateController::class)->breadcrumbIndex('Start');
+        Route::get('/foo', TestTemplateController::class)->breadcrumb('First');
 
         $this->get('/foo')->assertStatus(200);
 
@@ -50,8 +50,8 @@ class TemplateTest extends TestCase
     /** @test */
     public function it_returns_the_correct_bootstrap_4_template()
     {
-        Route::get('/', function (){})->breadcrumbIndex('Start');
-        Route::get('/foo', function (){})->breadcrumb('First');
+        Route::get('/', TestTemplateController::class)->breadcrumbIndex('Start');
+        Route::get('/foo', TestTemplateController::class)->breadcrumb('First');
 
         $this->get('/foo')->assertStatus(200);
 
@@ -83,8 +83,8 @@ class TemplateTest extends TestCase
     /** @test */
     public function it_returns_the_correct_bulma_template()
     {
-        Route::get('/', function (){})->breadcrumbIndex('Start');
-        Route::get('/foo', function (){})->breadcrumb('First');
+        Route::get('/', TestTemplateController::class)->breadcrumbIndex('Start');
+        Route::get('/foo', TestTemplateController::class)->breadcrumb('First');
 
         $this->get('/foo')->assertStatus(200);
 
@@ -118,8 +118,8 @@ class TemplateTest extends TestCase
     /** @test */
     public function it_returns_the_correct_foundation_6_template()
     {
-        Route::get('/', function (){})->breadcrumbIndex('Start');
-        Route::get('/foo', function (){})->breadcrumb('First');
+        Route::get('/', TestTemplateController::class)->breadcrumbIndex('Start');
+        Route::get('/foo', TestTemplateController::class)->breadcrumb('First');
 
         $this->get('/foo')->assertStatus(200);
 
@@ -139,4 +139,9 @@ class TemplateTest extends TestCase
         </nav>
         ', $html);
     }
+}
+
+class TestTemplateController
+{
+    public function __invoke() {}
 }
