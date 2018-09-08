@@ -9,14 +9,12 @@ use Fragkp\LaravelRouteBreadcrumb\Breadcrumb;
 use Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 
-class IntegrationTest extends TestCase
+class BreadcrumbTest extends TestCase
 {
-    protected static $controllerAction = 'Fragkp\\LaravelRouteBreadcrumb\\Tests\\TestController@index';
-
     /** @test */
     public function it_not_changes_the_default_behavior()
     {
-        Route::get('/foo', static::$controllerAction);
+        Route::get('/foo', TestBreadcrumbController::class);
 
         $this->get('/foo')->assertSuccessful();
 
@@ -67,7 +65,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_returns_always_the_breadcrumb_index()
     {
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::get('/foo', function () {
             throw new \Exception;
@@ -91,10 +89,10 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_returns_only_the_matched_breadcrumb()
     {
-        Route::get('/foo', static::$controllerAction)->breadcrumb('Foo');
-        Route::get('/bar/camp', static::$controllerAction)->breadcrumb('Bar');
-        Route::get('/zoo/deep/crew', static::$controllerAction)->breadcrumb('Zoo');
-        Route::get('/baz', static::$controllerAction)->breadcrumb('Baz');
+        Route::get('/foo', TestBreadcrumbController::class)->breadcrumb('Foo');
+        Route::get('/bar/camp', TestBreadcrumbController::class)->breadcrumb('Bar');
+        Route::get('/zoo/deep/crew', TestBreadcrumbController::class)->breadcrumb('Zoo');
+        Route::get('/baz', TestBreadcrumbController::class)->breadcrumb('Baz');
 
         $this->get('/zoo/deep/crew')->assertSuccessful();
 
@@ -114,8 +112,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_returns_only_the_matched_and_defined_index_breadcrumbs()
     {
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
-        Route::get('/foo', static::$controllerAction)->breadcrumb('First');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
+        Route::get('/foo', TestBreadcrumbController::class)->breadcrumb('First');
 
         $this->get('/foo')->assertSuccessful();
 
@@ -136,10 +134,10 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_returns_always_the_first_index()
     {
-        Route::get('/bar', static::$controllerAction)->breadcrumbIndex('Start first');
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start second');
-        Route::get('/zoo', static::$controllerAction)->breadcrumbIndex('Start third');
-        Route::get('/foo', static::$controllerAction)->breadcrumb('First');
+        Route::get('/bar', TestBreadcrumbController::class)->breadcrumbIndex('Start first');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start second');
+        Route::get('/zoo', TestBreadcrumbController::class)->breadcrumbIndex('Start third');
+        Route::get('/foo', TestBreadcrumbController::class)->breadcrumb('First');
 
         $this->get('/foo')->assertSuccessful();
 
@@ -160,7 +158,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_handle_the_breadcrumb_title_by_closure()
     {
-        Route::get('/foo', static::$controllerAction)->breadcrumb(function () {
+        Route::get('/foo', TestBreadcrumbController::class)->breadcrumb(function () {
             return 'Closure title';
         });
 
@@ -182,7 +180,7 @@ class IntegrationTest extends TestCase
     {
         $resolver = new CustomTitleResolver();
 
-        Route::get('/foo', static::$controllerAction)->breadcrumb([$resolver, 'getTitle']);
+        Route::get('/foo', TestBreadcrumbController::class)->breadcrumb([$resolver, 'getTitle']);
 
         $this->get('/foo')->assertSuccessful();
 
@@ -202,7 +200,7 @@ class IntegrationTest extends TestCase
     {
         $resolver = new CustomTitleResolver();
 
-        Route::get('/products/{category}/{name}', static::$controllerAction)->breadcrumb([$resolver, 'getTitleWithParameters']);
+        Route::get('/products/{category}/{name}', TestBreadcrumbController::class)->breadcrumb([$resolver, 'getTitleWithParameters']);
 
         $this->get('/products/shirts/foo')->assertSuccessful();
 
@@ -220,7 +218,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_handle_the_breadcrumb_title_by_custom_class()
     {
-        Route::get('/foo', static::$controllerAction)->breadcrumb(CustomTitleResolver::class);
+        Route::get('/foo', TestBreadcrumbController::class)->breadcrumb(CustomTitleResolver::class);
 
         $this->get('/foo')->assertSuccessful();
 
@@ -238,10 +236,10 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_returns_the_breadcrumb_inside_a_group()
     {
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::prefix('foo')->group(function () {
-            Route::get('/bar', static::$controllerAction)->breadcrumb('Inside group');
+            Route::get('/bar', TestBreadcrumbController::class)->breadcrumb('Inside group');
         });
 
         $this->get('/foo/bar')->assertSuccessful();
@@ -263,11 +261,11 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_returns_the_breadcrumb_inside_a_group_with_the_group_index()
     {
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::prefix('foo')->group(function () {
-            Route::get('/', static::$controllerAction)->breadcrumbGroup('Inside group - index');
-            Route::get('/bar', static::$controllerAction)->breadcrumb('Inside group - bar');
+            Route::get('/', TestBreadcrumbController::class)->breadcrumbGroup('Inside group - index');
+            Route::get('/bar', TestBreadcrumbController::class)->breadcrumb('Inside group - bar');
         });
 
         $this->get('/foo/bar')->assertSuccessful();
@@ -290,18 +288,18 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_handle_multiple_nested_groups()
     {
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::prefix('foo')->group(function () {
-            Route::get('/', static::$controllerAction)->breadcrumbGroup('Inside group - index');
-            Route::get('/bar', static::$controllerAction)->breadcrumb('Inside group - bar');
+            Route::get('/', TestBreadcrumbController::class)->breadcrumbGroup('Inside group - index');
+            Route::get('/bar', TestBreadcrumbController::class)->breadcrumb('Inside group - bar');
 
             Route::prefix('baz')->group(function () {
-                Route::get('/zoo', static::$controllerAction)->breadcrumb('Inside nested group - zoo');
+                Route::get('/zoo', TestBreadcrumbController::class)->breadcrumb('Inside nested group - zoo');
 
                 Route::prefix('too')->group(function () {
-                    Route::get('/', static::$controllerAction)->breadcrumbGroup('Inside nested group - group - index');
-                    Route::get('/crew', static::$controllerAction)->breadcrumb('Inside nested group - group - crew');
+                    Route::get('/', TestBreadcrumbController::class)->breadcrumbGroup('Inside nested group - group - index');
+                    Route::get('/crew', TestBreadcrumbController::class)->breadcrumb('Inside nested group - group - crew');
                 });
             });
         });
@@ -432,7 +430,7 @@ class IntegrationTest extends TestCase
         factory(Foo::class, 1)->create();
         factory(Bar::class, 5)->create();
 
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::prefix('first-group')->group(function () {
             Route::get('/')->breadcrumbGroup('Inside first group');
@@ -538,7 +536,7 @@ class IntegrationTest extends TestCase
             return abort(404);
         });
 
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::middleware(SubstituteBindings::class)->group(function () {
             Route::get('/binding/{customBinding}', function (CustomBinding $customBinding) {
@@ -586,7 +584,7 @@ class IntegrationTest extends TestCase
             return abort(404);
         });
 
-        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
         Route::middleware(SubstituteBindings::class)->group(function () {
             Route::get('/binding/{customBinding}', function (CustomBinding $customBinding) {
@@ -624,11 +622,11 @@ class IntegrationTest extends TestCase
     }
 }
 
-class TestController
+class TestBreadcrumbController
 {
-    public function index()
+    public function __invoke()
     {
-        return 'test';
+        //
     }
 }
 

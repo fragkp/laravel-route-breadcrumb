@@ -3,6 +3,7 @@
 namespace Fragkp\LaravelRouteBreadcrumb;
 
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class BreadcrumbServiceProvider extends ServiceProvider
@@ -14,7 +15,17 @@ class BreadcrumbServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views/', 'laravel-breadcrumb');
+
+        $this->publishes([
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/laravel-breadcrumb'),
+        ], 'views');
+
         $this->app->singleton(Breadcrumb::class);
+
+        View::composer('laravel-breadcrumb::*', function (\Illuminate\View\View $view) {
+            $view->with('breadcrumb', $this->app->make(Breadcrumb::class)->links());
+        });
     }
 
     /**

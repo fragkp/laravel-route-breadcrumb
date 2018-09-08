@@ -29,6 +29,25 @@ If you want also use the facade to access the main breadcrumb class, add this li
 'Breadcrumb' => Fragkp\LaravelRouteBreadcrumb\Facades\Breadcrumb::class,
 ```
 
+This package contains some pre-built views for the most active css-frameworks:
+- [Bootstrap 3](https://github.com/fragkp/laravel-route-breadcrumb/tree/master/resources/views/bootstrap3.blade.php)
+- [Bootstrap 4](https://github.com/fragkp/laravel-route-breadcrumb/tree/master/resources/views/bootstrap4.blade.php)
+- [Bulma](https://github.com/fragkp/laravel-route-breadcrumb/tree/master/resources/views/bulma.blade.php)
+- [Foundation 6](https://github.com/fragkp/laravel-route-breadcrumb/tree/master/resources/views/foundation6.blade.php)
+
+If you want to use one of these views, include it in this way:
+
+```php
+@include('laravel-breadcrumb::bootstrap3')
+```
+
+To customize the pre-built views, run this command:
+
+```bash
+php artisan vendor:publish Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider --tag=views
+```
+> Note: You could also create your own [custom view](#view-example) to display breadcrumb links.
+
 ## Usage
 
 ### Defining breadcrumbs
