@@ -624,7 +624,10 @@ class BreadcrumbTest extends TestCase
 
 class TestBreadcrumbController
 {
-    public function __invoke() {}
+    public function __invoke()
+    {
+        //
+    }
 }
 
 class Foo extends Model
