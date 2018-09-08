@@ -9,7 +9,7 @@ use Fragkp\LaravelRouteBreadcrumb\Breadcrumb;
 use Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 
-class IntegrationTest extends TestCase
+class BreadcrumbTest extends TestCase
 {
     protected static $controllerAction = 'Fragkp\\LaravelRouteBreadcrumb\\Tests\\TestController@index';
 
