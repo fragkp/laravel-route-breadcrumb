@@ -77,23 +77,14 @@ class Breadcrumb
      */
     protected function groupLinks()
     {
-        $pathPrefixes = $this->groupPrefixes(
-            $this->request->path()
-        );
-
-        $routeUriPrefixes = $this->groupPrefixes(
-            optional($this->request->route())->uri() ?? ''
-        );
+        $pathPrefixes = $this->groupPrefixes($this->request->path());
 
         return $this->routes()
-            ->filter(function (Route $route) use ($routeUriPrefixes) {
-                return in_array($route->uri(), $routeUriPrefixes, true);
-            })
             ->filter(function (Route $route) {
                 return $route->getAction('breadcrumb') && $route->getAction('breadcrumbGroup');
             })
-            ->mapWithKeys(function (Route $route) use ($routeUriPrefixes, $pathPrefixes) {
-                $routeUri = $pathPrefixes[array_search($route->uri(), $routeUriPrefixes, true)];
+            ->mapWithKeys(function (Route $route) use ($pathPrefixes) {
+                $routeUri = $pathPrefixes[substr_count($route->uri(), '/') + 1];
 
                 return [$routeUri => app(BreadcrumbLinkFactory::class)->create($routeUri, $route)];
             });
@@ -129,14 +120,16 @@ class Breadcrumb
      */
     protected function groupPrefixes(string $currentPath)
     {
-        $prefixes = array_map(function ($prefix) use ($currentPath) {
-            return str_before($currentPath, $prefix);
-        }, $currentPathParts = explode('/', $currentPath));
+        $prefixes = explode('/', $currentPath);
+
+        $prefixes = array_map(function ($prefix) use ($prefixes) {
+            $startPrefixes = implode('/', array_slice($prefixes, 0, array_search($prefix, $prefixes)));
+
+            return ltrim("{$startPrefixes}/{$prefix}", '/');
+        }, $prefixes);
 
         $prefixes = array_filter($prefixes);
 
-        return array_map(function ($prefix) {
-            return rtrim($prefix, '/');
-        }, $prefixes);
+        return array_prepend($prefixes, '/');
     }
 }
