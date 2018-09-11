@@ -158,6 +158,30 @@ class IntegrationTest extends TestCase
     }
 
     /** @test */
+    public function it_handles_same_uri_groups_as_different_breadcrumbs()
+    {
+        Route::get('/', static::$controllerAction)->breadcrumbIndex('Start');
+        Route::get('/bar', static::$controllerAction)->breadcrumbGroup('bar');
+        Route::get('/bar/bar', static::$controllerAction)->breadcrumb('bar bar');
+
+        $this->get('/bar/bar')->assertSuccessful();
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(3, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            '/'       => new BreadcrumbLink('/', 'Start'),
+            'bar'     => new BreadcrumbLink('bar', 'bar'),
+            'bar/bar' => new BreadcrumbLink('bar/bar', 'bar bar'),
+        ]), $breadcrumbLinks);
+
+        $this->assertEquals(new BreadcrumbLink('/', 'Start'), app(Breadcrumb::class)->index());
+
+        $this->assertEquals(new BreadcrumbLink('bar/bar', 'bar bar'), app(Breadcrumb::class)->current());
+    }
+
+    /** @test */
     public function it_can_handle_the_breadcrumb_title_by_closure()
     {
         Route::get('/foo', static::$controllerAction)->breadcrumb(function () {
