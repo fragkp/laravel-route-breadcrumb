@@ -77,9 +77,18 @@ class Breadcrumb
      */
     protected function groupLinks()
     {
-        $pathPrefixes = $this->groupPrefixes($this->request->path());
+        $pathPrefixes = $this->groupPrefixes(
+            $this->request->path()
+        );
+
+        $routeUriPrefixes = $this->groupPrefixes(
+            optional($this->request->route())->uri() ?? ''
+        );
 
         return $this->routes()
+            ->filter(function (Route $route) use ($routeUriPrefixes) {
+                return in_array($route->uri(), $routeUriPrefixes, true);
+            })
             ->filter(function (Route $route) {
                 return $route->getAction('breadcrumb') && $route->getAction('breadcrumbGroup');
             })
