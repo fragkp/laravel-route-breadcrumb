@@ -29,9 +29,9 @@ class BreadcrumbLinkFactory
      */
     public function create(string $uri, Route $route)
     {
-        $route = RouteParameterBinder::bind($this->request, $route);
-
         try {
+            $route = RouteParameterBinder::bind($this->request, $route);
+
             $resolvedTitle = static::resolveTitle(
                 $route->getAction('breadcrumb'),
                 static::routeParameters($route)
