@@ -3,7 +3,7 @@
 namespace Fragkp\LaravelRouteBreadcrumb;
 
 use Closure;
-use TypeError;
+use Throwable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 
@@ -36,7 +36,7 @@ class BreadcrumbLinkFactory
                 $route->getAction('breadcrumb'),
                 static::routeParameters($route)
             );
-        } catch (TypeError $error) {
+        } catch (Throwable $error) {
             return;
         }
 
