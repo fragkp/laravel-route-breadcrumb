@@ -60,5 +60,13 @@ class BreadcrumbServiceProvider extends ServiceProvider
                 return $this;
             });
         }
+
+        if (! Route::hasMacro('breadcrumbCollection')) {
+            Route::macro('breadcrumbCollection', function (string $collection) {
+                $this->action['breadcrumbCollection'] = $collection;
+
+                return $this;
+            });
+        }
     }
 }

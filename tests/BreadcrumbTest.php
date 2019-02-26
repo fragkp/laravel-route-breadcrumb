@@ -180,6 +180,30 @@ class BreadcrumbTest extends TestCase
     }
 
     /** @test */
+    public function it_handles_route_collection()
+    {
+        Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
+        Route::get('/bar', TestBreadcrumbController::class)->breadcrumbGroup('bar');
+        Route::get('/bar/bar', TestBreadcrumbController::class)->breadcrumb('bar bar');
+
+        $this->get('/bar/bar')->assertSuccessful();
+
+        $breadcrumbLinks = app(Breadcrumb::class)->links();
+
+        $this->assertCount(3, $breadcrumbLinks);
+        $this->assertInstanceOf(Collection::class, $breadcrumbLinks);
+        $this->assertEquals(new Collection([
+            '/'       => new BreadcrumbLink('/', 'Start'),
+            'bar'     => new BreadcrumbLink('bar', 'bar'),
+            'bar/bar' => new BreadcrumbLink('bar/bar', 'bar bar'),
+        ]), $breadcrumbLinks);
+
+        $this->assertEquals(new BreadcrumbLink('/', 'Start'), app(Breadcrumb::class)->index());
+
+        $this->assertEquals(new BreadcrumbLink('bar/bar', 'bar bar'), app(Breadcrumb::class)->current());
+    }
+
+    /** @test */
     public function it_can_handle_the_breadcrumb_title_by_closure()
     {
         Route::get('/foo', TestBreadcrumbController::class)->breadcrumb(function () {

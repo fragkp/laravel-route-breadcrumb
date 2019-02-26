@@ -106,7 +106,7 @@ class Breadcrumb
     {
         $route = $this->request->route();
 
-        if (! $route || ! isset($route->getAction()['breadcrumb'])) {
+        if (! $route || ! $route->getAction('breadcrumb')) {
             return;
         }
 
@@ -118,9 +118,23 @@ class Breadcrumb
      */
     protected function routes()
     {
-        $this->routes = $this->routes ?: Collection::make($this->router->getRoutes()->getRoutes());
+        $breadcrumbCollection = ($route = $this->request->route())
+            ? $route->getAction('breadcrumbCollection')
+            : null;
 
-        return $this->routes;
+        if ($this->routes) {
+            return $this->routes;
+        }
+
+        $routes = Collection::make($this->router->getRoutes()->getRoutes());
+
+        if (! is_null($breadcrumbCollection)) {
+            $routes = $routes->filter(function (Route $route) use ($breadcrumbCollection) {
+                return $route->getAction('breadcrumbCollection') === $breadcrumbCollection;
+            });
+        }
+
+        return $this->routes = $routes;
     }
 
     /**

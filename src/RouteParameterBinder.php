@@ -14,7 +14,11 @@ class RouteParameterBinder
      */
     public static function bind(Request $request, Route $route)
     {
-        $compiledRouteParameters = $route->getCompiled()->getVariables();
+        if (is_null($compiledRoute = $route->getCompiled())) {
+            return $route;
+        }
+
+        $compiledRouteParameters = $compiledRoute->getVariables();
 
         if (! empty($compiledRouteParameters)) {
             $currentParameters = $request->route()->parameters();
