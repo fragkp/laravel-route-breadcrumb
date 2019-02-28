@@ -5,6 +5,7 @@ sudo: false
 php:
     - 7.1
     - 7.2
+    - 7.3
 
 cache:
     directories:
@@ -12,16 +13,17 @@ cache:
 
 env:
     matrix:
-        - Laravel=5.5 Orchestra=3.5 PHPUnit=6.0
-        - Laravel=5.6 Orchestra=3.6 PHPUnit=7.0
-        - Laravel=5.7 Orchestra=3.7 PHPUnit=7.0
+        - Laravel=~5.5 Orchestra=~3.5 OrchestraDB=~3.5 PHPUnit=~6.0
+        - Laravel=~5.6 Orchestra=~3.6 OrchestraDB=~3.6 PHPUnit=~7.0
+        - Laravel=~5.7 Orchestra=~3.7 OrchestraDB=~3.7 PHPUnit=~7.0
+        - Laravel=~5.8 Orchestra=~3.8 OrchestraDB=3.8.x-dev PHPUnit=~7.0
 
 before_script:
     - travis_retry composer self-update
-    - travis_retry composer require "laravel/framework:~${Laravel}.0" --no-update
-    - travis_retry composer require "orchestra/testbench:~${Orchestra}.0" --no-update --dev
-    - travis_retry composer require "orchestra/database:~${Orchestra}.0" --no-update --dev
-    - travis_retry composer require "phpunit/phpunit:~${PHPUnit}.0" --no-update --dev
+    - travis_retry composer require "laravel/framework:${Laravel}.0" --no-update
+    - travis_retry composer require "orchestra/testbench:${Orchestra}.0" --no-update --dev
+    - travis_retry composer require "orchestra/database:${Orchestra}.0" --no-update --dev
+    - travis_retry composer require "phpunit/phpunit:${PHPUnit}.0" --no-update --dev
     - travis_retry composer update --no-interaction --prefer-dist
 
 script:
