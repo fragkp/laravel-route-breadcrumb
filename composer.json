@@ -47,7 +47,7 @@
                 "Fragkp\\LaravelRouteBreadcrumb\\BreadcrumbServiceProvider"
             ],
             "aliases": {
-                "Breadcrumb": "Fragkp\\LaravelRouteBreadcrumb\\BreadcrumbServiceProvider\\Facades\\Breadcrumb"
+                "Breadcrumb": "Fragkp\\LaravelRouteBreadcrumb\\Facades\\Breadcrumb"
             }
         }
     }
