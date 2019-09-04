@@ -15,14 +15,6 @@ You can install the package via composer:
 composer require fragkp/laravel-route-breadcrumb
 ```
 
-Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
-
-If you don't use Auto-Discovery, add the ServiceProvider to the providers array in config/app.php
-
-```php
-Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider::class,
-```
-
 If you want also use the facade to access the main breadcrumb class, add this line to your facades array in config/app.php:
 
 ```php

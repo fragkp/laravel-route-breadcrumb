@@ -4,6 +4,7 @@ namespace Fragkp\LaravelRouteBreadcrumb;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 
 class RouteParameterBinder
 {
@@ -25,7 +26,7 @@ class RouteParameterBinder
 
             $route->bind(new Request);
 
-            foreach (array_only($currentParameters, $compiledRouteParameters) as $name => $parameter) {
+            foreach (Arr::only($currentParameters, $compiledRouteParameters) as $name => $parameter) {
                 $route->setParameter($name, $parameter);
             }
         }

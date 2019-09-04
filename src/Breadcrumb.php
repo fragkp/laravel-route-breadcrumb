@@ -2,6 +2,7 @@
 
 namespace Fragkp\LaravelRouteBreadcrumb;
 
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
@@ -153,6 +154,6 @@ class Breadcrumb
 
         $prefixes = array_filter($prefixes);
 
-        return array_prepend($prefixes, '/');
+        return Arr::prepend($prefixes, '/');
     }
 }
