@@ -5,6 +5,13 @@ sudo: false
 php:
     - 7.2
     - 7.3
+    - 7.4
+
+matrix:
+    fast_finish: true
+    include:
+        - env: laravel=^6.0 orchestra=~4.0
+        - env: laravel=^7.0 orchestra=~5.0
 
 cache:
     directories:
@@ -12,6 +19,9 @@ cache:
 
 before_script:
     - travis_retry composer self-update
+    - travis_retry composer require "laravel/framework:${laravel}" --no-update
+    - travis_retry composer require "orchestra/testbench:${orchestra}" --no-update --dev
+    - travis_retry composer require "orchestra/database:${orchestra}" --no-update --dev
     - travis_retry composer update --no-interaction --prefer-dist
 
 script:
