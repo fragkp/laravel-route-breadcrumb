@@ -7,11 +7,10 @@ php:
     - 7.3
     - 7.4
 
-matrix:
-    fast_finish: true
-    include:
-        - env: laravel=^6.0 orchestra=~4.0
-        - env: laravel=^7.0 orchestra=~5.0
+env:
+    matrix:
+        - laravel=^6.0 orchestra=~4.0
+        - laravel=^7.0 orchestra=~5.0
 
 cache:
     directories:
