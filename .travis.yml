@@ -9,8 +9,9 @@ php:
 
 env:
     matrix:
-        - laravel=^6.0 orchestra=~4.0 orchestra-db=~4.0
-        - laravel=^7.0 orchestra=~5.0 orchestra-db=5.x-dev
+        - laravel=^6.0 orchestra=^4.0 orchestra-db=^4.0
+        - laravel=^7.0 orchestra=^5.0 orchestra-db=^5.0
+        - laravel=^8.0 orchestra=^6.0 orchestra-db=^6.x-dev
 
 cache:
     directories:
