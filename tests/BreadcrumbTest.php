@@ -375,7 +375,7 @@ class BreadcrumbTest extends TestCase
     {
         $this->migrate();
 
-        factory(Foo::class, 1)->create();
+        Foo::create();
 
         Route::middleware(SubstituteBindings::class)->get('/binding/{foo}', function (Foo $foo) {
             return $foo->id;
@@ -399,7 +399,7 @@ class BreadcrumbTest extends TestCase
     {
         $this->migrate();
 
-        factory(Foo::class, 1)->create();
+        Foo::create();
 
         Route::middleware(SubstituteBindings::class)->get('/binding/{foo}', function (Foo $foo) {
             return $foo->id;
@@ -425,7 +425,7 @@ class BreadcrumbTest extends TestCase
     {
         $this->migrate();
 
-        factory(Foo::class, 1)->create();
+        Foo::create();
 
         $resolver = new CustomTitleResolver();
 
@@ -451,7 +451,8 @@ class BreadcrumbTest extends TestCase
     {
         $this->migrate();
 
-        factory(Foo::class, 2)->create();
+        Foo::create();
+        Foo::create();
 
         Route::middleware(SubstituteBindings::class)->get('/binding/{foo}', function (Foo $foo) {
             return $foo->id;
@@ -475,8 +476,12 @@ class BreadcrumbTest extends TestCase
     {
         $this->migrate();
 
-        factory(Foo::class, 1)->create();
-        factory(Bar::class, 5)->create();
+        Foo::create();
+        Bar::create();
+        Bar::create();
+        Bar::create();
+        Bar::create();
+        Bar::create();
 
         Route::get('/', TestBreadcrumbController::class)->breadcrumbIndex('Start');
 
@@ -580,7 +585,7 @@ class BreadcrumbTest extends TestCase
             return new CustomBinding($value);
         });
 
-        Route::bind('secondBinding', function ($value) {
+        Route::bind('secondBinding', function () {
             return abort(404);
         });
 

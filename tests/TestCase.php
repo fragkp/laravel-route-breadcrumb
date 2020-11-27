@@ -27,7 +27,5 @@ abstract class TestCase extends OrchestraTestCase
     protected function migrate()
     {
         $this->loadMigrationsFrom(realpath(__DIR__.'/database/migrations'));
-
-        $this->withFactories(realpath(__DIR__.'/database/factories'));
     }
 }
