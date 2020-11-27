@@ -13,7 +13,7 @@ jobs:
         strategy:
             fail-fast: true
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0]
+                php: [7.3, 7.4, 8.0]
                 laravel: [^6.0, ^7.0, ^8.0]
                 dependency-version: [prefer-lowest, prefer-stable]
                 include:
@@ -23,9 +23,6 @@ jobs:
                       testbench: ^5.0
                     - laravel: ^8.0
                       testbench: ^6.0
-                exclude:
-                    - laravel: ^8.0
-                      php: 7.2
 
         name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -43,7 +40,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
-                extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+                extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, exif, iconv
                 coverage: none
 
             - name: Install dependencies
