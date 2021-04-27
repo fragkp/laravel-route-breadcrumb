@@ -25,9 +25,7 @@ class Breadcrumb
         }
 
         if (is_null($breadcrumbParent = $currentRoute->getAction('breadcrumbParent'))) {
-            return Collection::make([
-                $this->createBreadcrumbLink($currentRoute)
-            ]);
+            return Collection::make([$this->createBreadcrumbLink($currentRoute)]);
         }
 
         $breadcrumbRoutes = Collection::make([$currentRoute]);

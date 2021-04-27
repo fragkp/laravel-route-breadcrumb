@@ -96,8 +96,7 @@ it('can handle the breadcrumb title by closure', function () {
 });
 
 it('can handle the breadcrumb title by callable', function () {
-    $resolver = new class
-    {
+    $resolver = new class {
         public function getTitle(): string
         {
             return 'Index Breadcrumb';
@@ -118,8 +117,7 @@ it('can handle the breadcrumb title by callable', function () {
 });
 
 it('can handle the breadcrumb title by callable with parameters', function () {
-    $resolver = new class
-    {
+    $resolver = new class {
         public function getTitle(string $foo, string $bar): string
         {
             return "$foo - $bar";
@@ -140,8 +138,7 @@ it('can handle the breadcrumb title by callable with parameters', function () {
 });
 
 it('can handle the breadcrumb title by custom class', function () {
-    $resolver = new class
-    {
+    $resolver = new class {
         public function __invoke(string $foo, string $bar): string
         {
             return "$foo - $bar";
