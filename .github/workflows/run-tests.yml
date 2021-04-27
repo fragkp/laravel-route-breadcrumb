@@ -33,7 +33,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
-                extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, exif, iconv
+                extensions: dom, curl, libxml, mbstring, zip, pcntl, bcmath, soap, intl, exif, iconv
                 coverage: none
 
             - name: Install dependencies
@@ -42,4 +42,4 @@ jobs:
                 composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
             - name: Execute tests
-              run: vendor/bin/phpunit
+              run: composer test
