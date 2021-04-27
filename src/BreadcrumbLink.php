@@ -2,25 +2,27 @@
 
 namespace Fragkp\LaravelRouteBreadcrumb;
 
+use Illuminate\Routing\Route;
+
 class BreadcrumbLink
 {
-    /**
-     * @var string
-     */
-    public $uri;
+    protected Route $route;
 
-    /**
-     * @var string
-     */
-    public $title;
+    protected string $title;
 
-    /**
-     * @param string $uri
-     * @param string $title
-     */
-    public function __construct(string $uri, string $title)
+    public function __construct(Route $route, string $title)
     {
-        $this->uri = $uri;
+        $this->route = $route;
         $this->title = $title;
+    }
+
+    public function route(): Route
+    {
+        return $this->route;
+    }
+
+    public function title(): string
+    {
+        return $this->title;
     }
 }

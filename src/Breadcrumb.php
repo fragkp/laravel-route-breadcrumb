@@ -2,158 +2,54 @@
 
 namespace Fragkp\LaravelRouteBreadcrumb;
 
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
+use RuntimeException;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
 
 class Breadcrumb
 {
-    /**
-     * @var \Illuminate\Routing\Router
-     */
-    protected $router;
+    protected Router $router;
 
-    /**
-     * @var \Illuminate\Http\Request
-     */
-    protected $request;
-
-    /**
-     * @var \Illuminate\Support\Collection|\Illuminate\Routing\Route[]|null
-     */
-    protected $routes;
-
-    /**
-     * @param \Illuminate\Routing\Router $router
-     * @param \Illuminate\Http\Request   $request
-     */
-    public function __construct(Router $router, Request $request)
+    public function __construct(Router $router)
     {
         $this->router = $router;
-        $this->request = $request;
     }
 
-    /**
-     * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
-     */
-    public function index()
+    public function links(): Collection
     {
-        $indexRoute = $this->routes()->first(function (Route $route) {
-            return $route->getAction('breadcrumbIndex');
-        });
+        $currentRoute = $this->router->current();
 
-        if (! $indexRoute) {
-            return;
+        if (is_null($currentRoute) || is_null($currentRoute->getAction('breadcrumbTitle'))) {
+            return Collection::make();
         }
 
-        return app(BreadcrumbLinkFactory::class)->create($indexRoute->uri(), $indexRoute);
+        if (is_null($breadcrumbParent = $currentRoute->getAction('breadcrumbParent'))) {
+            return Collection::make([
+                $this->createBreadcrumbLink($currentRoute)
+            ]);
+        }
+
+        $breadcrumbRoutes = Collection::make([$currentRoute]);
+
+        do {
+            if (is_null($parentRoute = $this->router->getRoutes()->getByName($breadcrumbParent))) {
+                throw new RuntimeException("Breadcrumb parent route [$breadcrumbParent] not found.");
+            }
+
+            $breadcrumbRoutes->prepend($parentRoute);
+
+            $breadcrumbParent = $parentRoute->getAction('breadcrumbParent');
+        } while (! is_null($breadcrumbParent));
+
+        return $breadcrumbRoutes->map(fn (Route $route) => $this->createBreadcrumbLink($route));
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function links()
+    protected function createBreadcrumbLink(Route $route): BreadcrumbLink
     {
-        $links = $this->groupLinks();
-
-        if ($indexLink = $this->index()) {
-            $links->prepend($indexLink, $indexLink->uri);
-        }
-
-        if ($currentLink = $this->current()) {
-            $links->put($currentLink->uri, $currentLink);
-        }
-
-        if ($indexLink && is_null($currentLink)) {
-            return Collection::make([$indexLink->uri => $indexLink]);
-        }
-
-        return $links;
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected function groupLinks()
-    {
-        $pathPrefixes = $this->groupPrefixes(
-            $this->request->path()
-        );
-
-        $routeUriPrefixes = $this->groupPrefixes(
-            optional($this->request->route())->uri() ?? ''
-        );
-
-        return $this->routes()
-            ->filter(function (Route $route) use ($routeUriPrefixes) {
-                return in_array($route->uri(), $routeUriPrefixes, true);
-            })
-            ->filter(function (Route $route) {
-                return $route->getAction('breadcrumb') && $route->getAction('breadcrumbGroup');
-            })
-            ->mapWithKeys(function (Route $route) use ($pathPrefixes) {
-                $routeUri = $pathPrefixes[substr_count($route->uri(), '/') + 1];
-
-                return [$routeUri => app(BreadcrumbLinkFactory::class)->create($routeUri, $route)];
-            });
-    }
-
-    /**
-     * @return \Fragkp\LaravelRouteBreadcrumb\BreadcrumbLink|null
-     */
-    public function current()
-    {
-        $route = $this->request->route();
-
-        if (! $route || ! $route->getAction('breadcrumb')) {
-            return;
-        }
-
-        return app(BreadcrumbLinkFactory::class)->create($this->request->path(), $route);
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection|\Illuminate\Routing\Route[]
-     */
-    protected function routes()
-    {
-        $breadcrumbCollection = ($route = $this->request->route())
-            ? $route->getAction('breadcrumbCollection')
-            : null;
-
-        if ($this->routes) {
-            return $this->routes;
-        }
-
-        $routes = Collection::make($this->router->getRoutes()->getRoutes());
-
-        if (! is_null($breadcrumbCollection)) {
-            $routes = $routes->filter(function (Route $route) use ($breadcrumbCollection) {
-                return $route->getAction('breadcrumbCollection') === $breadcrumbCollection;
-            });
-        }
-
-        return $this->routes = $routes;
-    }
-
-    /**
-     * @param string $currentPath
-     * @return array
-     */
-    protected function groupPrefixes(string $currentPath)
-    {
-        $prefixes = explode('/', $currentPath);
-
-        $prefixes = array_map(function ($prefix) use ($prefixes) {
-            $startPrefixes = implode('/', array_slice($prefixes, 0, array_search($prefix, $prefixes)));
-
-            return ltrim("{$startPrefixes}/{$prefix}", '/');
-        }, $prefixes);
-
-        $prefixes = array_filter($prefixes);
-
-        return Arr::prepend($prefixes, '/');
+        return new BreadcrumbLink($route, Support::resolveBreadcrumbTitle(
+            $route->getAction('breadcrumbTitle'),
+            array_values(Support::resolveRouteParameters($route))
+        ));
     }
 }

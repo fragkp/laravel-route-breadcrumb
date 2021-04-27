@@ -3,29 +3,14 @@
 namespace Fragkp\LaravelRouteBreadcrumb\Tests;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
-            \Fragkp\LaravelRouteBreadcrumb\BreadcrumbServiceProvider::class,
-            \Orchestra\Database\ConsoleServiceProvider::class,
+            BreadcrumbServiceProvider::class,
         ];
-    }
-
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('database.default', 'testbench');
-        $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
-            'prefix'   => '',
-        ]);
-    }
-
-    protected function migrate()
-    {
-        $this->loadMigrationsFrom(realpath(__DIR__.'/database/migrations'));
     }
 }
