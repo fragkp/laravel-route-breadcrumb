@@ -3,8 +3,7 @@
 [![Latest Version](https://img.shields.io/packagist/v/fragkp/laravel-route-breadcrumb.svg?style=flat-square)](https://github.com/fragkp/laravel-route-breadcrumb/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/fragkp/laravel-route-breadcrumb.svg?style=flat-square)](https://packagist.org/packages/fragkp/laravel-route-breadcrumb)
 
-This package tries to give a simple solution for breadcrumbs.   
-Add breadcrumbs direct to your routes!
+This package tries to give a simple solution for breadcrumbs.
 
 ## Installation
 
